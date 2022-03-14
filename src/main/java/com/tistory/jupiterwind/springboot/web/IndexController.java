@@ -1,5 +1,7 @@
 package com.tistory.jupiterwind.springboot.web;
 
+import com.tistory.jupiterwind.springboot.config.auth.LoginUser;
+import com.tistory.jupiterwind.springboot.config.auth.dto.SessionUser;
 import com.tistory.jupiterwind.springboot.service.posts.PostsService;
 import com.tistory.jupiterwind.springboot.web.dto.PostsResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +17,13 @@ public class IndexController {
     private final PostsService postsService;
 
     @GetMapping("/")
-    public String index(Model model){  // Model : 서버 템플릿 엔진에서 사용할 수 있는 객체를 저장할 수 있다.
+    public String index(Model model, @LoginUser SessionUser user){  // Model : 서버 템플릿 엔진에서 사용할 수 있는 객체를 저장할 수 있다.
         model.addAttribute("posts", postsService.findAllDesc());
+
+        if(user != null){
+            model.addAttribute("userName", user.getName());
+        }
+
         return "index";
     }
 
